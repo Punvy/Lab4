@@ -85,6 +85,9 @@ public class Rope extends PhysicalThing implements AbleBeAttracted, Attachable {
 	}
 	@Override
 	public void changeLocation(Location location) {
+		if(location.isNearLocation(getLocation())) {
+			throw new MoveOutOfLocationException();
+		}
 		attachEnd.deleteThing(this);
 		if(location.isSublocation() && (!getLocation().isSublocation() ||!getLocation().getSuperlocation().equals(location.getSuperlocation()))) {
 			System.out.println(this.toString() + " перемещается в " + location.getSuperlocation().toString() );

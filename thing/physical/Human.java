@@ -1,9 +1,14 @@
 package thing.physical;
+import com.sun.jdi.event.StepEvent;
 import inter.AbleBeAttracted;
 import inter.Attachable;
 import inter.Dragable;
 import inter.Moveable;
 import inter.Pushable;
+
+import javax.swing.plaf.nimbus.State;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Human extends PhysicalThing implements Dragable, Moveable,Pushable{
 	
@@ -13,11 +18,27 @@ public class Human extends PhysicalThing implements Dragable, Moveable,Pushable{
 		this.weight = weight;
 		this.setLocation(location);
 		location.addThing(this);
+		legs.add(new Leg("Правая"));
+		legs.add(new Leg("Левая"));
+		hands.add(new Hand("Правая"));
+		hands.add(new Hand("Левая"));
 	}
 	
 	private String name;
 	private int power;
-	
+	private ArrayList<Hand> hands = new ArrayList<>();
+	private ArrayList<Leg>  legs = new ArrayList<>();
+
+	public State getState() {
+		return state;
+	}
+
+	public void setState(State state) {
+		this.state = state;
+	}
+
+	private State state;
+
 	public String getName() {
 		return name;
 	}
@@ -42,9 +63,9 @@ public class Human extends PhysicalThing implements Dragable, Moveable,Pushable{
 			i.move(location);
 		}
 	}
-	@Override
-	public void move(Location location) {
-		System.out.printf("%s %s %s\n", this.toString(), getLocation().getMove(), getLocation().toString());
+
+	public void move(Location location, boolean wishMoveWithCondition) {
+		moveInLocation(wishMoveWithCondition);
 		changeLocation(location);
 	}
 	@Override
@@ -57,10 +78,24 @@ public class Human extends PhysicalThing implements Dragable, Moveable,Pushable{
 		
 	}
 	
-	
-	public void moveInLocation() {
+	public void raiseAllHands(){
+		for(Hand hand : hands) {
+			hand.raise();
+		}
+	}
+
+	public void doStepAllLegs(){
+		for (Leg leg : legs){
+			leg.doStep();
+		}
+	}
+
+	public void moveInLocation(boolean wishMoveWithCondition) {
 		if(getLocation().isHaveMoveWithConditions()) {
-			if(getLocation().getMoveWithConditions().equals(MoveInLocation.FLY) && isBeCarried()) {
+			if(getLocation().getMoveWithConditions().equals(Location.MoveInLocation.FLY) && isBeCarried() && wishMoveWithCondition) {
+				System.out.printf("%s %s %s\n", this.toString(), getLocation().getMoveWithConditions(), getLocation().toString());
+			}
+			else if(getLocation().getMoveWithConditions().equals(Location.MoveInLocation.JUMP) && wishMoveWithCondition && legs.size() >= 2) {
 				System.out.printf("%s %s %s\n", this.toString(), getLocation().getMoveWithConditions(), getLocation().toString());
 			}
 			else {
@@ -71,6 +106,7 @@ public class Human extends PhysicalThing implements Dragable, Moveable,Pushable{
 			System.out.printf("%s %s %s\n", this.toString(), getLocation().getMove(), getLocation().toString());
 		}
 	}
+
 	@Override
 	public void changeLocation(Location location) {		
 		if(location.isNearLocation(getLocation())) {
@@ -94,6 +130,63 @@ public class Human extends PhysicalThing implements Dragable, Moveable,Pushable{
 		getLocation().addThing(this);
 		if(!getAttachThings().isEmpty()) {
 			moveAttachThing(location);
+		}
+	}
+
+	@Override
+	public void move(Location location) {
+		moveInLocation(false);
+		changeLocation(location);
+	}
+
+	public static enum State {
+		Normal("с легкостью"),
+		Weakened("с трудом");
+
+		@Override
+		public String toString() {
+			return adjectiveActionWithState;
+		}
+
+		String adjectiveActionWithState;
+
+		private State(String adjectiveActionWithState) {
+			this.adjectiveActionWithState = adjectiveActionWithState;
+		}
+	}
+
+	public class Leg {
+
+		String name;
+
+		@Override
+		public String toString() {
+			return name;
+		}
+
+		public void doStep() {
+			System.out.printf("%s %s %s %s%n",  Human.this , getState().toString(), "поднимает", this.toString());
+		}
+
+		private Leg(String whatLeg) {
+			this.name = String.format("%s %s", whatLeg, "нога");
+		}
+	}
+
+	public class Hand {
+		String name;
+
+		@Override
+		public String toString() {
+			return name;
+		}
+
+		public void raise(){
+			System.out.printf("%s %s %s %s%n",  Human.this , getState().toString(), "делает шаг", this.toString());
+		}
+
+		private Hand(String whatHand){
+			this.name = String.format("%s %s", whatHand, "нога");
 		}
 	}
 }

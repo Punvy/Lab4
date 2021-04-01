@@ -38,8 +38,27 @@ public class Location {
 	private List<PhysicalThing> things  = new ArrayList<PhysicalThing>();
 	private boolean sublocation = false; 
 	private Location superlocation;
-	
-	
+
+
+	public static enum MoveInLocation {
+		CLIMBUP("вскарабкивается по"),
+		GO("идет по"),
+		RUN("бежит по"),
+		FLY("летит по"),
+		FALL("упал в"),
+		JUMP("перепрыгнул через");
+
+
+		String move;
+		public String toString() {
+			return move;
+		}
+
+		private MoveInLocation(String move) {
+			this.move = move;
+		}
+	}
+
 	public boolean isHaveMoveWithConditions() {
 		return haveMoveWithConditions;
 	}

@@ -1,6 +1,7 @@
 package thing.mystical;
 
 import inter.Pushable;
+import thing.physical.Human;
 import thing.physical.Location;
 import thing.physical.PhysicalThing;
 
@@ -27,6 +28,9 @@ public class MysticalPower implements Pushable{
 			System.out.println(this.toString() + " потянула " + thing.toString());
 			thing.move(location);
 			thing.setBeCarried(false);
+			if(thing instanceof Human) {
+				((Human) thing).setState(Human.State.Weakened);
+			}
 		}
 	}
 }

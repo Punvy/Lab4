@@ -1,14 +1,11 @@
 package thing.physical;
-import com.sun.jdi.event.StepEvent;
 import inter.AbleBeAttracted;
 import inter.Attachable;
 import inter.Dragable;
 import inter.Moveable;
 import inter.Pushable;
 
-import javax.swing.plaf.nimbus.State;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Human extends PhysicalThing implements Dragable, Moveable,Pushable{
 	
@@ -63,7 +60,6 @@ public class Human extends PhysicalThing implements Dragable, Moveable,Pushable{
 			i.move(location);
 		}
 	}
-
 	public void move(Location location, boolean wishMoveWithCondition) {
 		moveInLocation(wishMoveWithCondition);
 		changeLocation(location);
@@ -77,19 +73,20 @@ public class Human extends PhysicalThing implements Dragable, Moveable,Pushable{
 	public void push(PhysicalThing thing, Location location) {
 		
 	}
-	
 	public void raiseAllHands(){
 		for(Hand hand : hands) {
 			hand.raise();
 		}
 	}
-
 	public void doStepAllLegs(){
 		for (Leg leg : legs){
-			leg.doStep();
+			try {
+				leg.doStep();
+			}catch (Exception e){
+				System.err.println("Действие невозможно! СЛИШКОМ БОЛЬНО!");
+			}
 		}
 	}
-
 	public void moveInLocation(boolean wishMoveWithCondition) {
 		if(getLocation().isHaveMoveWithConditions()) {
 			if(getLocation().getMoveWithConditions().equals(Location.MoveInLocation.FLY) && isBeCarried() && wishMoveWithCondition) {
@@ -106,7 +103,6 @@ public class Human extends PhysicalThing implements Dragable, Moveable,Pushable{
 			System.out.printf("%s %s %s\n", this.toString(), getLocation().getMove(), getLocation().toString());
 		}
 	}
-
 	@Override
 	public void changeLocation(Location location) {		
 		if(location.isNearLocation(getLocation())) {
@@ -132,16 +128,15 @@ public class Human extends PhysicalThing implements Dragable, Moveable,Pushable{
 			moveAttachThing(location);
 		}
 	}
-
 	@Override
 	public void move(Location location) {
 		moveInLocation(false);
 		changeLocation(location);
 	}
-
 	public static enum State {
 		Normal("с легкостью"),
-		Weakened("с трудом");
+		Weakened("с трудом"),
+		TerriblePain("с ужасной болью");
 
 		@Override
 		public String toString() {
@@ -154,7 +149,6 @@ public class Human extends PhysicalThing implements Dragable, Moveable,Pushable{
 			this.adjectiveActionWithState = adjectiveActionWithState;
 		}
 	}
-
 	public class Leg {
 
 		String name;
@@ -164,7 +158,8 @@ public class Human extends PhysicalThing implements Dragable, Moveable,Pushable{
 			return name;
 		}
 
-		public void doStep() {
+		public void doStep() throws PainActionException {
+			if(Human.this.state.equals(State.TerriblePain)) throw new PainActionException();
 			System.out.printf("%s %s %s %s%n",  Human.this , getState().toString(), "поднимает", this.toString());
 		}
 
@@ -172,7 +167,6 @@ public class Human extends PhysicalThing implements Dragable, Moveable,Pushable{
 			this.name = String.format("%s %s", whatLeg, "нога");
 		}
 	}
-
 	public class Hand {
 		String name;
 

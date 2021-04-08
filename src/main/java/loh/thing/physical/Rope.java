@@ -2,6 +2,7 @@ package thing.physical;
 
 import java.util.*;
 
+import exception.MoveOutOfLocationException;
 import inter.AbleBeAttracted;
 import inter.Attachable;
 import inter.Dragable;

@@ -1,4 +1,6 @@
 package thing.physical;
+import exception.MoveOutOfLocationException;
+import exception.PainActionException;
 import inter.AbleBeAttracted;
 import inter.Attachable;
 import inter.Dragable;
@@ -164,7 +166,7 @@ public class Human extends PhysicalThing implements Dragable, Moveable,Pushable{
 		}
 
 		private Leg(String whatLeg) {
-			this.name = String.format("%s %s", whatLeg, "нога");
+			this.name = String.format("%s %s", whatLeg, "рука");
 		}
 	}
 	public class Hand {

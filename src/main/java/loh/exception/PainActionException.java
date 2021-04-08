@@ -1,4 +1,4 @@
-package thing.physical;
+package exception;
 
 public class PainActionException extends Exception{
 }

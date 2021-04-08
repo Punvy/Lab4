@@ -1,12 +1,11 @@
-import java.util.ArrayList;
-
-import java.util.List;
-
-import thing.physical.Human;
-import thing.physical.Rope;
 import thing.mystical.MysticalPower;
 import thing.mystical.Wind;
-import thing.physical.*;
+import thing.physical.Human;
+import thing.physical.Location;
+import thing.physical.Rope;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 	public static void main(String[] args) {

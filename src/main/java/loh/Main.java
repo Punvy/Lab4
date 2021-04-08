@@ -1,7 +1,8 @@
-import thing.mystical.MysticalPower;
+import inter.Pushable;
 import thing.mystical.Wind;
 import thing.physical.Human;
 import thing.physical.Location;
+import thing.physical.PhysicalThing;
 import thing.physical.Rope;
 
 import java.util.ArrayList;
@@ -36,7 +37,24 @@ public class Main {
 		
 		znayka.move(roof);
 		Wind wind = new Wind(10);
-		MysticalPower power = new MysticalPower(10,"Мистическая");
+		Pushable power = new Pushable(){
+			@Override
+			public void push(PhysicalThing thing, Location location) {
+				if(10 >= thing.getWeight()) {
+					System.out.println(this.toString() + " потянула " + thing.toString());
+					thing.move(location);
+					thing.setBeCarried(false);
+					if(thing instanceof Human) {
+						((Human) thing).setState(Human.State.Weakened);
+					}
+				}
+			}
+
+			@Override
+			public String toString() {
+				return "Мистическая сила";
+			}
+		};
 		
 		wind.push(znayka, sky);
 		wind.carry(znayka);

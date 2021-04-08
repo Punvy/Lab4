@@ -51,6 +51,6 @@
 - Знайка с трудом поднимает Правая нога
 - Знайка с трудом поднимает Левая нога
 
-##UML-Модель:
+## UML-Модель:
 
 ![UML MODEL](https://github.com/Punvy/Lab4/blob/master/uml.png)
